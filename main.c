@@ -43,6 +43,13 @@ int main(int argc, char *argv[])
     e = pHead;
     e->pNext = NULL;
 
+//for size of hashtable
+#if defined(HASH)
+        hash_table *htable;
+        htable = create_hash_table();
+#endif
+
+
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
@@ -52,7 +59,11 @@ int main(int argc, char *argv[])
             i++;
         line[i - 1] = '\0';
         i = 0;
-        e = append(line, e);
+#if defined(HASH)
+        append(line, htable);
+#else
+	e = append(line,e);
+#endif
     }
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time1 = diff_in_second(start, end);
@@ -66,25 +77,50 @@ int main(int argc, char *argv[])
     char input[MAX_LAST_NAME_SIZE] = "zyxel";
     e = pHead;
 
-    assert(findName(input, e) &&
-           "Did you implement findName() in " IMPL "?");
-    assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
+#if defined(HASH)
+        assert(findName(input, htable) &&
+               "Did you implement findName() in " IMPL "?");
+        assert(0 == strcmp(findName(input, htable)->lastName, "zyxel"));
+#elif defined(SMAZ)
+	char string_lastname[MAX_LAST_NAME_SIZE];
+	int comprlen = smaz_compress("zyxel", strlen("zyxel"), string_lastname, sizeof(string_lastname));
+	assert(findName(input, e) &&
+               "Did you implement findName() in " IMPL "?");
+        assert(0 == strcmp(findName(input, e)->lastName, string_lastname));
+
+#else
+        assert(findName(input, e) &&
+               "Did you implement findName() in " IMPL "?");
+        assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
+#endif
 
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
+
     /* compute the execution time */
-    clock_gettime(CLOCK_REALTIME, &start);
-    findName(input, e);
-    clock_gettime(CLOCK_REALTIME, &end);
-    cpu_time2 = diff_in_second(start, end);
+#if defined(HASH)
+        clock_gettime(CLOCK_REALTIME, &start);
+        findName(input, htable);
+#else
+        clock_gettime(CLOCK_REALTIME, &start);
+        findName(input, e);
+#endif
+        clock_gettime(CLOCK_REALTIME, &end);
+        cpu_time2 = diff_in_second(start, end);
 
     FILE *output;
-#if defined(OPT)
-    output = fopen("opt.txt", "a");
+
+#if defined(STRUCT)
+    output = fopen("struct.txt", "a");
+#elif defined(HASH)
+    output = fopen("hash.txt", "a");
+#elif defined(SMAZ)
+    output = fopen("smaz.txt","a");
 #else
-    output = fopen("orig.txt", "a");
+    output = fopen("orig.txt","a");
 #endif
+
     fprintf(output, "append() findName() %lf %lf\n", cpu_time1, cpu_time2);
     fclose(output);
 
