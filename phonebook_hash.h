@@ -19,15 +19,15 @@ typedef struct __PHONE_BOOK_ENTRY {
 } entry_all;
 
 //只尋找lastname先就可以了，可以再通過lastname尋找所有的詳細資料
-typedef struct __LASTNAME_ENTRY{
-	char lastName[MAX_LAST_NAME_SIZE];
-	entry_all *all;//for finding more detail
-	struct __LASTNAME_ENTRY *pNext;
+typedef struct __LASTNAME_ENTRY {
+    char lastName[MAX_LAST_NAME_SIZE];
+    entry_all *all;//for finding more detail
+    struct __LASTNAME_ENTRY *pNext;
 } entry;
 
 typedef struct _BKDRHASH_TABLE {
-        int size;//size of table
-        entry **table;
+    int size;//size of table
+    entry **table;
 } hash_table;
 
 entry *findName(char *lastName, hash_table *htable);

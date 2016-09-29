@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
 
 //for size of hashtable
 #if defined(HASH)
-        hash_table *htable;
-        htable = create_hash_table();
+    hash_table *htable;
+    htable = create_hash_table();
 #endif
 
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 #if defined(HASH)
         append(line, htable);
 #else
-	e = append(line,e);
+        e = append(line,e);
 #endif
     }
     clock_gettime(CLOCK_REALTIME, &end);
@@ -78,20 +78,20 @@ int main(int argc, char *argv[])
     e = pHead;
 
 #if defined(HASH)
-        assert(findName(input, htable) &&
-               "Did you implement findName() in " IMPL "?");
-        assert(0 == strcmp(findName(input, htable)->lastName, "zyxel"));
+    assert(findName(input, htable) &&
+           "Did you implement findName() in " IMPL "?");
+    assert(0 == strcmp(findName(input, htable)->lastName, "zyxel"));
 #elif defined(SMAZ)
-	char string_lastname[MAX_LAST_NAME_SIZE];
-	int comprlen = smaz_compress("zyxel", strlen("zyxel"), string_lastname, sizeof(string_lastname));
-	assert(findName(input, e) &&
-               "Did you implement findName() in " IMPL "?");
-        assert(0 == strcmp(findName(input, e)->lastName, string_lastname));
+    char string_lastname[MAX_LAST_NAME_SIZE];
+    int comprlen = smaz_compress("zyxel", strlen("zyxel"), string_lastname, sizeof(string_lastname));
+    assert(findName(input, e) &&
+           "Did you implement findName() in " IMPL "?");
+    assert(0 == strcmp(findName(input, e)->lastName, string_lastname));
 
 #else
-        assert(findName(input, e) &&
-               "Did you implement findName() in " IMPL "?");
-        assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
+    assert(findName(input, e) &&
+           "Did you implement findName() in " IMPL "?");
+    assert(0 == strcmp(findName(input, e)->lastName, "zyxel"));
 #endif
 
 #if defined(__GNUC__)
@@ -100,14 +100,14 @@ int main(int argc, char *argv[])
 
     /* compute the execution time */
 #if defined(HASH)
-        clock_gettime(CLOCK_REALTIME, &start);
-        findName(input, htable);
+    clock_gettime(CLOCK_REALTIME, &start);
+    findName(input, htable);
 #else
-        clock_gettime(CLOCK_REALTIME, &start);
-        findName(input, e);
+    clock_gettime(CLOCK_REALTIME, &start);
+    findName(input, e);
 #endif
-        clock_gettime(CLOCK_REALTIME, &end);
-        cpu_time2 = diff_in_second(start, end);
+    clock_gettime(CLOCK_REALTIME, &end);
+    cpu_time2 = diff_in_second(start, end);
 
     FILE *output;
 
